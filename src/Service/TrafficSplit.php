@@ -16,7 +16,7 @@ class TrafficSplit
 {
     private const string GATEWAY_KEY = 'gateway';
     private const string WEIGHT_KEY = 'weight';
-    PRIVATE const int VALID_PERCENTAGE = 100;
+    private const int VALID_PERCENTAGE = 100;
     /**
      * Array of gateways and weights
      *
