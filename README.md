@@ -62,7 +62,6 @@ We need to develop a new feature to route transactions between several payment g
 ### Code Structure
 
 ```
-
 src/
 ├── Controller/
 │   └── .gitkeep
@@ -92,7 +91,7 @@ tests/
 
 - **PaymentGatewayInterface** – all payment gateways implement this interface (must have `process(Payment $payment)` and `getTrafficLoad(): int`).
 - **Concrete Gateways** – e.g. `Przelewy24PaymentGateway`, `TpayPaymentGateway`, etc.
-- **TrafficSplit** – core class, routes transactions based on provided weights using Random Weighted Choice.
+- **TrafficSplit** – main logic class, routes transactions based on provided weights using Random Weighted Choice.
 - **Payment (Entity)** – a mock entity to represent the payment object passed to the splitter.
 - **Tests (PHPUnit)** – test both correct and incorrect configurations and show distribution statistics.
 
@@ -115,6 +114,34 @@ tests/
 ### Automation:
 Tests are run automatically with GitHub Actions after every push to `main` or `master` branch.
 <br>Workflow file: `.github/workflows/run-phpunit.yml`.
+
+### Example results:
+
+```
+Runtime:       PHP 8.3.19
+Configuration: /var/www/html/phpunit.dist.xml
+
+1. Equal distributed weights [25/25/25/25]: 242 / 279 / 226 / 253
+
+2. Different distributed weights [75/10/15]: 758 / 94 / 148
+
+3. Different distributed weights [30/20/45/5]: 314 / 197 / 444 / 45
+
+.....                                                             7 / 7 (100%)
+
+Time: 00:00.009, Memory: 6.00 MB
+
+Traffic Split (App\Tests\TrafficSplit)
+ ✔ Equal distribution four gateways
+ ✔ Weighted distribution
+ ✔ Weighted distribution variant
+ ✔ Throws exception if weights dont sum to 100
+ ✔ Throws exception if any weight is zero
+ ✔ Throws exception if any weight is negative
+ ✔ Throws exception if gateway is not valid
+
+OK (7 tests, 26 assertions)
+```
 
 ---
 
